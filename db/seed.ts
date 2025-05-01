@@ -4,6 +4,7 @@ import { counter, db } from 'astro:db';
 export default async function seed() {
 	await db.insert(counter).values({
 		id: 0,
-		lastMentionTimestamp: new Date()
+		lastMentionTimestamp: new Date(),
+		highscore: 0
 	});
 }

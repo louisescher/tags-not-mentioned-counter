@@ -8,7 +8,7 @@ const res = await db.select().from(counter).where(eq(counter.id, 0));
 const date = res[0]?.lastMentionTimestamp || new Date();
 
 if (!res[0]?.lastMentionTimestamp) {
-	await db.insert(counter).values({ id: 0, lastMentionTimestamp: new Date() });
+	await db.insert(counter).values({ id: 0, lastMentionTimestamp: new Date(), highscore: 0 });
 }
 
 const title = "Days since tags were last mentioned";
@@ -40,6 +40,7 @@ const desc = "A counter that resets every time tags are mentioned. (Again.)";
 			<div class="counter-card">
 				<h2>Days since tags were last mentioned</h2>
 				<h1>{Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24))}</h1>
+				<p class="highscore">Longest duration without mentions: {res[0]?.highscore || 0} days</p>
 			</div>
 		</main>
 	</body>
@@ -106,5 +107,9 @@ const desc = "A counter that resets every time tags are mentioned. (Again.)";
 		-webkit-text-fill-color: transparent;
 		width: fit-content;
 		margin: 0 auto;
+	}
+
+	.highscore {
+		color: #bbbbbb;
 	}
 </style>
