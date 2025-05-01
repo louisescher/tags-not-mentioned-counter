@@ -1,5 +1,15 @@
 ---
+import "@fontsource-variable/noto-sans/index.css"
+import background from "../assets/bg.svg"
+import noise from "../assets/noise.webp"
+import { counter, db, eq } from "astro:db"
 
+const res = await db.select().from(counter).where(eq(counter.id, 0));
+const date = res[0]?.lastMentionTimestamp || new Date();
+
+if (!res[0]?.lastMentionTimestamp) {
+	await db.insert(counter).values({ id: 0, lastMentionTimestamp: new Date() });
+}
 ---
 
 <html lang="en">
@@ -8,9 +18,79 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>Days since tags were last mentioned</title>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<img id="noise" src={noise.src} alt="" />
+		<img id="background" src={background.src} alt="" />
+		<main>
+			<div class="counter-card">
+				<h2>Days since tags were last mentioned</h2>
+				<h1>{Math.floor((Date.now() - new Date(date).getTime()) / (1000 * 60 * 60 * 24))}</h1>
+			</div>
+		</main>
 	</body>
 </html>
+<style>
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		font-family: "Noto Sans Variable", sans-serif;
+	}
+
+	body {
+		background-color: #0b0b0b;
+		position: relative;
+	}
+
+	#noise {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -0;
+		opacity: .5;
+		user-select: none;
+	}	
+
+	#background {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: -1;
+		filter: blur(100px);
+		user-select: none;
+	}
+
+	main {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100vw;
+		height: 100vh;
+	}
+
+	.counter-card {
+		border: 1px solid #353535;
+		border-radius: 1rem;
+		padding: 2rem;
+		text-align: center;
+		color: #ffffff;
+		background-color: rgba(11, 11, 11, .5);
+		backdrop-filter: blur(5px);
+	}
+
+	h1 {
+		font-size: 10rem;
+		margin: 0;
+		font-weight: 900;
+		background: linear-gradient(to bottom right, #4ff0cc 0%, #3657bb 100%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		width: fit-content;
+		margin: 0 auto;
+	}
+</style>
