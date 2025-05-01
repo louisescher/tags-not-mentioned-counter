@@ -10,6 +10,9 @@ const date = res[0]?.lastMentionTimestamp || new Date();
 if (!res[0]?.lastMentionTimestamp) {
 	await db.insert(counter).values({ id: 0, lastMentionTimestamp: new Date() });
 }
+
+const title = "Days since tags were last mentioned";
+const desc = "A counter that resets every time tags are mentioned. (Again.)";
 ---
 
 <html lang="en">
@@ -18,7 +21,17 @@ if (!res[0]?.lastMentionTimestamp) {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Days since tags were last mentioned</title>
+		<title>{title}</title>
+		<meta name="description" content={desc} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={desc} />
+		<meta property="og:image" content={'/og.png'} />
+		<meta property="og:url" content={Astro.site} />
+		<meta property="og:locale" content="en" />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={desc} />
+		<meta name="twitter:image" content={'/og.png'} />
 	</head>
 	<body>
 		<img id="noise" src={noise.src} alt="" />
